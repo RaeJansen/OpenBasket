@@ -1,0 +1,17 @@
+{
+  "name": "openbasket-game",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bad-words": "^4.0.0",
+    "firebase": "^11.4.0",
+    "phaser": "^3.88.2"
+  }
+}
