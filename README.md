@@ -146,7 +146,6 @@ Before running this project, make sure you have **Node.js** installed on your sy
   } catch (error) {
       console.error('Error:', error);
   }
-
 -
 ## **License**
 This project is licensed under the MIT License - see the LICENSE file for details.
