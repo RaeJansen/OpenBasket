@@ -147,6 +147,6 @@ Before running this project, make sure you have **Node.js** installed on your sy
       console.error('Error:', error);
   }
 
-
-License
+-
+## **License**
 This project is licensed under the MIT License - see the LICENSE file for details.
