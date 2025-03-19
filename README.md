@@ -1,6 +1,6 @@
-# **OpenBasket Whack-a-Mole Game**
+# **OpenBasket Game**
 
-Welcome to the **OpenBasket Whack-a-Mole-style game**! This game is based on the concept of finding authentic grocery ingredients, and it includes fun and engaging mechanics to help you discover foods from different cultures.
+Welcome to the **OpenBasket game**! This game is based on the concept of finding authentic grocery ingredients, and it includes fun and engaging mechanics to help you discover foods from different cultures.
 
 ### **Table of Contents**
 1. [Project Setup](#project-setup)
