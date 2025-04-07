@@ -1,3 +1,46 @@
+// Game Over Page
+class GameOver extends Phaser.Scene {
+  constructor() {
+    super({ key: "GameOver" });
+  }
+
+  create() {
+    // Add semi-transparent background
+    let graphics = this.add.graphics();
+    graphics.fillStyle(0x000000, 0.8); // Black, 80% transparent
+    graphics.fillRect(0, 0, this.game.config.width, this.game.config.height);
+
+    // Game Over text
+    this.add.text(this.game.config.width / 2, this.game.config.height / 2 - 50, "Game Over", {
+      fontSize: "64px",
+      fill: "#fff",
+      fontFamily: "Helvetica",
+    }).setOrigin(0.5);
+
+    // Score display
+    this.add.text(this.game.config.width / 2, this.game.config.height / 2 + 20, `Your Score: ${score}`, {
+      fontSize: "32px",
+      fill: "#fff",
+      fontFamily: "Helvetica",
+    }).setOrigin(0.5);
+
+    // Play Again button
+    const playAgainButton = this.add.text(this.game.config.width / 2, this.game.config.height / 2 + 100, "Play Again", {
+      fontSize: "32px",
+      fill: "#fff",
+      fontFamily: "Helvetica",
+      backgroundColor: "#4285f4", // Google blue
+      padding: { x: 20, y: 10 },
+    }).setOrigin(0.5).setInteractive();
+
+    playAgainButton.on("pointerdown", () => {
+      score = 0;
+      remainingTime = 120; // Reset timer for new game
+      this.scene.start("default");
+    });
+  }
+}
+
 // Game config (global)
 const config = {
   type: Phaser.AUTO,
@@ -7,11 +50,14 @@ const config = {
     default: "arcade",
     arcade: { gravity: { y: 0 }, debug: false },
   },
-  scene: {
-    preload: preload,
-    create: create,
-    update: update,
-  },
+  scene: [
+    {
+      preload: preload,
+      create: create,
+      update: update,
+    },
+    GameOver,
+  ],
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -24,6 +70,8 @@ const game = new Phaser.Game(config);
 // Global variables
 let score = 0;
 let scoreText;
+let timerDisplay;
+let remainingTime = 120; // 2 minutes in seconds
 let veggieConfig = [
   { texture: "veggie1", points: 10, weight: 21 },
   { texture: "veggie2", points: 10, weight: 21 },
@@ -143,10 +191,10 @@ function veggieSpawnTimer(scene) {
     }
 
     // Schedule next batch after .5 to .7 seconds
-    scene.time.delayedCall(Phaser.Math.Between(500, 700), spawnNext);
+    scene.time.delayedCall(Phaser.Math.Between(250, 350), spawnNext);
   };
 
-  spawnNext(); // Start the cycle
+   scene.time.delayedCall(500, spawnNext);
 }
 
 // Main scene functions
@@ -160,13 +208,13 @@ function create() {
   scoreText = this.add.text(16, 16, "Score: 0", {
     fontSize: "32px",
     fill: "#e73f12",
-    fontFamily: "Arial",
+    fontFamily: "Helvetica",
   });
 
   timerDisplay = this.add.text(16, 300, "Time: 2:00", {
     fontSize: "32px",
     fill: "#e73f12",
-    fontFamily: "Arial",
+    fontFamily: "Helvetica",
   });
 
   // Veggie group
@@ -180,11 +228,24 @@ function create() {
   // Start random spawn timer
   veggieSpawnTimer(this);
 
-  // 2-minute timer
-  this.time.addEvent({
-    delay: 120000,
-    callback: () => this.scene.start("GameOver"),
-  });
+// Countdown timer event
+this.time.addEvent({
+  delay: 1000, // Every second
+  loop: true,
+  callback: () => {
+    remainingTime--;
+
+    // Format time as MM:SS
+    const minutes = Math.floor(remainingTime / 60);
+    const seconds = remainingTime % 60;
+    timerDisplay.setText(`Time: ${minutes}:${seconds.toString().padStart(2, "0")}`);
+
+    if (remainingTime <= 0) {
+      this.scene.start("GameOver");
+    }
+  },
+});
+  
 }
 
 function update() {}
