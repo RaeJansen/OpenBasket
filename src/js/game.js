@@ -41,6 +41,7 @@ class GameOver extends Phaser.Scene {
   }
 }
 
+
 // Game config (global)
 const config = {
   type: Phaser.AUTO,
