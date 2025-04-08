@@ -1,3 +1,6 @@
+import { GameOver } from './game-over.js';
+import { PauseScene } from './pause-scene.js';
+
 // Game config (global)
 const config = {
   type: Phaser.AUTO,
@@ -7,11 +10,15 @@ const config = {
     default: "arcade",
     arcade: { gravity: { y: 0 }, debug: false },
   },
-  scene: {
-    preload: preload,
-    create: create,
-    update: update,
-  },
+  scene: [
+    {
+      preload: preload,
+      create: create,
+      update: update,
+    },
+    GameOver,
+    PauseScene,
+  ],
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -24,167 +31,238 @@ const game = new Phaser.Game(config);
 // Global variables
 let score = 0;
 let scoreText;
-let veggieConfig = [
-  { texture: "veggie1", points: 10, weight: 21 },
-  { texture: "veggie2", points: 10, weight: 21 },
-  { texture: "veggie3", points: 10, weight: 21 },
-  { texture: "veggie4", points: 15, weight: 13 },
-  { texture: "veggie5", points: 30, weight: 6 },
-  { texture: "veggie6", points: -20, weight: 18 },
+let timerDisplay;
+let remainingTime = 60; // 2 minutes in seconds
+let objectConfig = [
+  { texture: "seaweed", points: 10, weight: 25 },
+  { texture: "bao-bao", points: 15, weight: 20 },
+  { texture: "mandazi", points: 20, weight: 15 },
+  { texture: "dragon-fruit", points: 30, weight: 6 },
+  { texture: "moo-ping", points: 30, weight: 6 },
+  { texture: "pop-can", points: -20, weight: 15 },
+  { texture: "logo", points: 100, weight: 0.5 },
 ];
+
 
 // Preload assets
 function preload() {
   // loads assets we will be using in game
-  this.load.image("store", "./assets/img/store.png");
-  this.load.image("veggie1", "./assets/img/veggie-1.webp");
-  this.load.image("veggie2", "./assets/img/veggie-2.webp");
-  this.load.image("veggie3", "./assets/img/veggie-3.webp");
-  this.load.image("veggie4", "./assets/img/veggie-4.webp");
-  this.load.image("veggie5", "./assets/img/veggie-5.webp");
-  this.load.image("veggie6", "./assets/img/veggie-6.webp");
+  this.load.image("store", "./assets/img/store-bg.webp");
+  this.load.image("seaweed", "./assets/img/seaweed.webp");
+  this.load.image("dragon-fruit", "./assets/img/dragon-fruit.webp");
+  this.load.image("bao-bao", "./assets/img/bao-bao.webp");
+  this.load.image("mandazi", "./assets/img/mandazi.webp");
+  this.load.image("moo-ping", "./assets/img/moo-ping.webp");
+  this.load.image("pop-can", "./assets/img/pop-can.webp");
+  this.load.image("logo", "./assets/img/logo.webp");
 }
 
 // Helper functions
-function pickWeightedVeggie() {
+function pickWeightedObject() {
   let random = Phaser.Math.Between(0, 100);
-  for (const veggie of veggieConfig) {
-    if (random <= veggie.weight) return veggie;
-    random -= veggie.weight;
+  for (const object of objectConfig) {
+    if (random <= object.weight) return object;
+    random -= object.weight;
   }
-  return veggieConfig[0];
+  return objectConfig[0];
 }
 
-function createRandomVeggie(scene) {
+function createRandomObject(scene) {
   const MAX_ATTEMPTS = 50;
-  const PADDING = 30; // Minimum space between veggies
   let attempts = 0;
-  let veggie;
+  let object;
   let validPosition = false;
-  const selectedVeggie = pickWeightedVeggie();
+  const selectedObject = pickWeightedObject();
 
-  // Prevent infinite loops
+  const newObjectScale = 1.5; // all objects use this scale
+  const newObjectRadius = 50 * newObjectScale; // base size ~100px
+
+  // Try up to MAX_ATTEMPTS to find a non-overlapping position
   while (!validPosition && attempts < MAX_ATTEMPTS) {
     attempts++;
 
-    // Generate random position
+    // Generate a random position on the screen (avoiding top bar)
     const x = Phaser.Math.Between(50, scene.game.config.width - 50);
-    const y = Phaser.Math.Between(50, scene.game.config.height - 50);
+    const y = Phaser.Math.Between(120 + newObjectRadius + 10, scene.game.config.height - newObjectRadius);
 
-    // Check if position is valid (no overlaps)
     validPosition = true;
-    scene.veggies.getChildren().forEach((existingVeggie) => {
-      const distance = Phaser.Math.Distance.Between(
-        x,
-        y,
-        existingVeggie.x,
-        existingVeggie.y
-      );
-      if (distance < PADDING) {
+
+    // Loop through all existing objects to check for overlap
+    scene.objects.getChildren().forEach((existingObject) => {
+      const existingRadius = existingObject.displayWidth / 2;
+      const safeDistance = newObjectRadius + existingRadius + 10;
+
+      const distance = Phaser.Math.Distance.Between(x, y, existingObject.x, existingObject.y);
+      if (distance < safeDistance) {
         validPosition = false;
       }
     });
 
-    // If position is good, create the veggie
+    // If position is good, create the object
     if (validPosition) {
-      veggie = scene.veggies.create(x, y, selectedVeggie.texture);
-      veggie.setInteractive();
-      veggie.setData("points", selectedVeggie.points);
+      object = scene.objects.create(x, y, selectedObject.texture);
+      object.setScale(newObjectScale);
+      object.setInteractive();
+      object.setData("points", selectedObject.points);
 
-      // Click handler
-      veggie.on("pointerdown", () => {
-        score += veggie.getData("points");
-        scoreText.setText(`Score: ${score}`);
-        // tweens used to animate veggie
-        scene.tweens.add({
-          targets: veggie,
-          scaleX: 1.5,
-          scaleY: 1.5,
-          alpha: 0,
-          //duration = time to complete animation
-          duration: 100,
-          onComplete: () => veggie.destroy(),
-        });
+      // Make object shrink and disappear faster as time goes on
+      // Shrink faster as time runs out
+      const progress = 1 - (scene.registry.get("remainingTime") / 60);
+      const minLifetime = Phaser.Math.Linear(1500, 400, progress);
+      const maxLifetime = Phaser.Math.Linear(4000, 1200, progress);
+      const lifetime = Phaser.Math.Between(minLifetime, maxLifetime);
+
+      // Start shrink tween
+      scene.tweens.add({
+        targets: object,
+        scaleX: 0.8,
+        scaleY: 0.8,
+        duration: lifetime,
+        ease: "Linear",
       });
 
-      // Auto-disappear
-      scene.time.delayedCall(Phaser.Math.Between(1000, 1500), () => {
-        if (veggie?.active) {
+      // Schedule a fade-out + destroy AFTER the shrink finishes
+      scene.time.delayedCall(lifetime, () => {
+        if (object?.active) {
           scene.tweens.add({
-            targets: veggie,
+            targets: object,
             alpha: 0,
-            duration: 100,
-            onComplete: () => veggie.destroy(),
+            duration: 10, // always quick destroy
+            onComplete: () => object.destroy(),
           });
         }
       });
+
+      // Handle click
+      object.on("pointerdown", () => {
+        score += object.getData("points");
+        scene.registry.set("score", score);
+        scene.registry.set("remainingTime", remainingTime);
+        scoreText.setText(`Score: ${score}`);
+
+        scene.tweens.add({
+          targets: object,
+          scaleX: object.scaleX * 1.3,
+          scaleY: object.scaleY * 1.3,
+          alpha: 0,
+          duration: 80,
+          ease: "Power2",
+          onComplete: () => object.destroy(),
+        });
+      });
+
     }
   }
 
   if (!validPosition) {
-    console.warn(
-      "Failed to find non-overlapping position after",
-      MAX_ATTEMPTS,
-      "attempts"
-    );
+    console.warn("Failed to place object after", MAX_ATTEMPTS, "attempts");
     return null;
   }
 
-  return veggie;
+  return object;
 }
 
-// Spawn veggies at random intervals
-function veggieSpawnTimer(scene) {
+// Spawn objects at random intervals
+function objectSpawnTimer(scene) {
   const spawnNext = () => {
-    // Spawn 1 or 2 veggies at once
-    const veggieCount = Phaser.Math.Between(1, 2);
-    for (let i = 0; i < veggieCount; i++) {
-      createRandomVeggie(scene);
+    const progress = 1 - (scene.registry.get("remainingTime") / 60); // 0 → 1
+
+    // Spawn more objects later in the game
+    const objectCount = Phaser.Math.Between(1, Math.floor(1 + progress * 4)); // 1 → up to 4
+
+    for (let i = 0; i < objectCount; i++) {
+      createRandomObject(scene);
     }
 
-    // Schedule next batch after .5 to .7 seconds
-    scene.time.delayedCall(Phaser.Math.Between(500, 700), spawnNext);
+    // Decrease delay over time (start slower, speed up)
+    const minDelay = Phaser.Math.Linear(400, 150, progress);
+    const maxDelay = Phaser.Math.Linear(650, 300, progress);
+    const delay = Phaser.Math.Between(minDelay, maxDelay);
+
+    scene.time.delayedCall(delay, spawnNext);
   };
 
-  spawnNext(); // Start the cycle
+  spawnNext();
 }
 
 // Main scene functions
 function create() {
+  score = 0;
+  remainingTime = 60; // change this to change time. 1 = 1 sec
+  this.registry.set("score", score);
+  this.registry.set("remainingTime", remainingTime);
   // Background
   this.add
     .image(window.innerWidth / 2, window.innerHeight / 2, "store")
     .setDisplaySize(window.innerWidth, window.innerHeight);
+  
+  // white
+  let pinkOverlay = this.add.graphics();
+  pinkOverlay.fillStyle(0xFFFFFF, 0.8);
+  pinkOverlay.fillRect(0, 0, this.game.config.width, this.game.config.height);
+  
 
-  // Initial Score text
-  scoreText = this.add.text(16, 16, "Score: 0", {
+  const topBar = this.add.graphics();
+  topBar.fillStyle(0xE74011, 1); // Light pink background, nearly solid
+  topBar.fillRect(0, 0, this.game.config.width, 120);
+  
+  // Score text (top-left)
+  scoreText = this.add.text(30, 45, "Score: 0", {
     fontSize: "32px",
-    fill: "#e73f12",
-    fontFamily: "Arial",
+    fill: "#ffffff",
+    fontFamily: "Jua",
+  });
+  
+  // Timer text (top-center)
+  timerDisplay = this.add.text(this.game.config.width / 2, 45, "1:00", {
+    fontSize: "32px",
+    fill: "#ffffff",
+    fontFamily: "Jua",
+  }).setOrigin(0.5, 0); // Centered horizontally
+  
+  // Pause button (top-right)
+  const pauseButton = this.add.text(this.game.config.width - 30, 45, "Pause", {
+    fontSize: "32px",
+    fill: "#ffffff",
+    fontFamily: "Jua",
+  }).setOrigin(1, 0).setInteractive();
+
+  pauseButton.on("pointerdown", () => {
+    this.scene.launch("PauseScene");
+    this.scene.pause();
   });
 
-  timerDisplay = this.add.text(16, 300, "Time: 2:00", {
-    fontSize: "32px",
-    fill: "#e73f12",
-    fontFamily: "Arial",
-  });
+  // object group
+  this.objects = this.physics.add.group();
 
-  // Veggie group
-  this.veggies = this.physics.add.group();
-
-  // Initial veggies on screen
+  // Initial objects on screen
   for (let i = 0; i < Phaser.Math.Between(1, 4); i++) {
-    createRandomVeggie(this);
+    createRandomObject(this);
   }
 
   // Start random spawn timer
-  veggieSpawnTimer(this);
+  objectSpawnTimer(this);
 
-  // 2-minute timer
+  // Countdown timer event
   this.time.addEvent({
-    delay: 120000,
-    callback: () => this.scene.start("GameOver"),
-  });
+    delay: 1000, // Every second
+    loop: true,
+    callback: () => {
+      remainingTime--;
+      this.registry.set("remainingTime", remainingTime);
+
+    // Format time as MM:SS
+    const minutes = Math.floor(remainingTime / 60);
+    const seconds = remainingTime % 60;
+    timerDisplay.setText(`${minutes}:${seconds.toString().padStart(2, "0")}`);
+
+    if (remainingTime <= 0) {
+      console.log("Time's up")
+      this.scene.start("GameOver");
+    }
+  },
+});
+  
 }
 
 function update() {}
