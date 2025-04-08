@@ -1,40 +1,21 @@
-import { Boot } from "./scenes/Boot";
-import { Game } from "./scenes/Game";
-import { GameOver } from "./scenes/GameOver";
-import { MainMenu } from "./scenes/MainMenu";
-import { Preloader } from "./scenes/Preloader";
+import { ClickerGame } from "./ClickerGame.js";
 
-//  Find out more information about the Game Config at:
-//  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
+// renders the game canvas
 const config = {
-  type: Phaser.AUTO,
-  width: window.innerWidth,
-  height: window.innerHeight,
-  parent: "game-container",
-  backgroundColor: "#028af8",
+  type: Phaser.AUTO, // Use WebGL if available, otherwise Canvas
+  width: window.innerWidth, // Set width to screen width
+  height: window.innerHeight, // Set height to screen height
+  scene: {
+    preload: preload,
+    create: create,
+    update: update,
+  },
   scale: {
-    mode: Phaser.Scale.FIT,
-    autoCenter: Phaser.Scale.CENTER_BOTH,
+    mode: Phaser.Scale.FIT, // Scale the game to fit the screen
+    autoCenter: Phaser.Scale.CENTER_BOTH, // Center the game on the screen
+    parent: "game-container", // Optional: Attach the game to a specific HTML element
   },
-  physics: {
-    default: "arcade",
-    arcade: {
-      gravity: { y: 0 },
-      debug: false,
-    },
-  },
-  scene: [Boot, Preloader, MainMenu, Game, GameOver],
 };
 
-let score = 0;
-let scoreText;
-let veggieConfig = [
-  { texture: "veggie1", points: 10, weight: 21 },
-  { texture: "veggie2", points: 10, weight: 21 },
-  { texture: "veggie3", points: 10, weight: 21 },
-  { texture: "veggie4", points: 15, weight: 13 },
-  { texture: "veggie5", points: 30, weight: 6 },
-  { texture: "veggie6", points: -20, weight: 18 },
-];
-
 export default new Phaser.Game(config);
+

@@ -17,12 +17,6 @@
     "phaser": "^3.88.2"
   },
   "devDependencies": {
-    "buffer": "^6.0.3",
-    "@jgoz/esbuild-plugin-livereload": "^2.0.5",
-    "esbuild": "^0.21.2",
-    "esbuild-plugin-clean": "^1.0.1",
-    "esbuild-plugin-copy": "^2.1.1",
-    "esbuild-plugin-inline-image": "^0.0.9",
-    "esbuild-serve": "^1.0.1"
+
   }
 }
