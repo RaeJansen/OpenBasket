@@ -71,7 +71,7 @@ export class GameOver extends Phaser.Scene {
     this.add
       .text(
         this.game.config.width / 2,
-        this.game.config.height / 2 - 300,
+        this.game.config.height / 2 - 100,
         "Game Over",
         {
           fontSize: "64px",
