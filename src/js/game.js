@@ -197,6 +197,7 @@ function create() {
   remainingTime = 30; // change this to change time. 1 = 1 sec
   this.registry.set("score", score);
   this.registry.set("remainingTime", remainingTime);
+
   // Background
   const bg = this.add.image(
     this.scale.width / 2,
@@ -219,7 +220,7 @@ function create() {
   pinkOverlay.fillRect(0, 0, this.game.config.width, this.game.config.height);
 
   const topBar = this.add.graphics();
-  topBar.fillStyle(0xe74011, 1); // Light pink background, nearly solid
+  topBar.fillStyle(0xe74011, 1);
   topBar.fillRect(0, 0, this.game.config.width, 120);
 
   // Score text (top-left)
@@ -236,7 +237,7 @@ function create() {
       fill: "#ffffff",
       fontFamily: "Jua",
     })
-    .setOrigin(0.5, 0); // Centered horizontally
+    .setOrigin(0.5, 0);
 
   // Pause button (top-right)
   const pauseButton = this.add
@@ -256,30 +257,71 @@ function create() {
   // object group
   this.objects = this.physics.add.group();
 
+  // Countdown overlay
+  const countdownOverlay = this.add.graphics();
+  countdownOverlay.fillStyle(0xe74011, 0.7);
+  countdownOverlay.fillRect(
+    0,
+    0,
+    this.game.config.width,
+    this.game.config.height
+  );
+
+  const countdownText = this.add
+    .text(this.game.config.width / 2, this.game.config.height / 2, "3", {
+      fontSize: "64px",
+      fill: "#ffffff",
+      fontFamily: "Jua",
+      stroke: "#000000",
+      strokeThickness: 8,
+    })
+    .setOrigin(0.5);
+
+  // Countdown sequence
+  let count = 3;
+  const countdownInterval = this.time.addEvent({
+    delay: 1000,
+    repeat: 2,
+    callback: () => {
+      if (count > 1) {
+        count--;
+        countdownText.setText(count.toString());
+      } else {
+        countdownText.setText("Start!");
+        this.time.delayedCall(500, () => {
+          countdownOverlay.destroy();
+          countdownText.destroy();
+          // Start the game
+          startGame(this);
+        });
+      }
+    },
+  });
+}
+
+function startGame(scene) {
   // Initial objects on screen
   for (let i = 0; i < Phaser.Math.Between(1, 4); i++) {
-    createRandomObject(this);
+    createRandomObject(scene);
   }
 
   // Start random spawn timer
-  objectSpawnTimer(this);
+  objectSpawnTimer(scene);
 
   // Countdown timer event
-  this.time.addEvent({
-    delay: 1000, // Every second
+  scene.time.addEvent({
+    delay: 1000,
     loop: true,
     callback: () => {
       remainingTime--;
-      this.registry.set("remainingTime", remainingTime);
+      scene.registry.set("remainingTime", remainingTime);
 
-      // Format time as MM:SS
       const minutes = Math.floor(remainingTime / 60);
       const seconds = remainingTime % 60;
       timerDisplay.setText(`${minutes}:${seconds.toString().padStart(2, "0")}`);
 
       if (remainingTime <= 0) {
-        console.log("Time's up");
-        this.scene.start("GameOver");
+        scene.scene.start("GameOver");
       }
     },
   });

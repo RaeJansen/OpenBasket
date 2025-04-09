@@ -8,6 +8,40 @@ export class GameOver extends Phaser.Scene {
   create() {
     console.log("Entered GameOver scene");
 
+    // Add Time's up overlay
+    const timesUpOverlay = this.add.graphics();
+    timesUpOverlay.fillStyle(0xe74011, 0.7);
+    timesUpOverlay.fillRect(
+      0,
+      0,
+      this.game.config.width,
+      this.game.config.height
+    );
+
+    const timesUpText = this.add
+      .text(
+        this.game.config.width / 2,
+        this.game.config.height / 2,
+        "Time's up!",
+        {
+          fontSize: "64px",
+          fill: "#ffffff",
+          fontFamily: "Jua",
+          stroke: "#000000",
+          strokeThickness: 8,
+        }
+      )
+      .setOrigin(0.5);
+
+    // Remove overlay after 1 second
+    this.time.delayedCall(1000, () => {
+      timesUpOverlay.destroy();
+      timesUpText.destroy();
+      this.showGameOverScreen();
+    });
+  }
+
+  showGameOverScreen() {
     // Add auto-return timer
     this.autoReturnTimer = this.time.delayedCall(15000, () => {
       this.returnToIndex();
