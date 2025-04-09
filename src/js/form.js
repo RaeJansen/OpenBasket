@@ -30,7 +30,7 @@ document
         }
       );
 
-      window.location.href = "main-menu.html";
+      window.location.href = "main-menu.html"; 
     } catch (err) {
       alert("Error submitting form.");
       console.error(err);
