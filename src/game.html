@@ -16,13 +16,15 @@
             overflow: hidden;
             font-family: "jua", italic;
         }
+
         #game-container {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            }
-            canvas {
+        }
+
+        canvas {
             border: 2px solid #e74011;
             border-radius: 10px;
         }
@@ -32,6 +34,9 @@
 <body>
     <!-- Phaser game will be rendered here -->
     <script type="module" src="js/game.js"></script>
+
+    <input type="hidden" id="name" name="name">
+    <input type="hidden" id="score" name="score">
 </body>
 
 </html>
