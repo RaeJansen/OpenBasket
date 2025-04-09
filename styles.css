@@ -8,14 +8,14 @@ body {
   font-family: "jua", italic;
   text-align: center;
   margin: 3rem 0;
-  background: url(./src/assets/img/store-bg-opacity.webp) center/cover no-repeat;
+  background: url(./src/assets/img/store-bg.webp) center/cover no-repeat;
   /* background-color: #E73F12; */
 }
 
 .container {
   max-width: 1000px;
   margin: 0 auto;
-  background-color: #ffc5b5;
+  background-color: #ffc5b5e6;
   padding: 2rem;
   border-radius: 10px;
 }
