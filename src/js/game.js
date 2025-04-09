@@ -40,7 +40,7 @@ let objectConfig = [
   { texture: "dragon-fruit", points: 30, weight: 6 },
   { texture: "moo-ping", points: 35, weight: 6 },
   { texture: "pop-can", points: -20, weight: 15 },
-  { texture: "logo", points: 100, weight: 0.5 },
+  { texture: "logo", points: 100, weight: 1 },
 ];
 
 // Preload assets
@@ -53,7 +53,7 @@ function preload() {
   this.load.image("mandazi", "./assets/img/mandazi.webp");
   this.load.image("moo-ping", "./assets/img/moo-ping.webp");
   this.load.image("pop-can", "./assets/img/pop-can.webp");
-  this.load.image("logo", "./assets/img/logo.webp");
+  this.load.image("logo", "./assets/img/logo-object.webp");
 }
 
 // Helper functions
@@ -108,6 +108,7 @@ function createRandomObject(scene) {
     // If position is good, create the object
     if (validPosition) {
       object = scene.objects.create(x, y, selectedObject.texture);
+      // Adjust scale: smaller if it's the "logo", default otherwise
       object.setScale(newObjectScale);
       object.setInteractive();
       object.setData("points", selectedObject.points);
