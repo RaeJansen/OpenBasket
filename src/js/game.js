@@ -20,7 +20,7 @@ const config = {
     PauseScene,
   ],
   scale: {
-    mode: Phaser.Scale.FIT,
+    mode: Phaser.Scale.RESIZE,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     parent: "game-container",
   },
@@ -101,7 +101,6 @@ function createRandomObject(scene) {
     // If position is good, create the object
     if (validPosition) {
       object = scene.objects.create(x, y, selectedObject.texture);
-      // Adjust scale: smaller if it's the "logo", default otherwise
       object.setScale(newObjectScale);
       object.setInteractive();
       object.setData("points", selectedObject.points);
@@ -193,9 +192,16 @@ function create() {
   this.registry.set("score", score);
   this.registry.set("remainingTime", remainingTime);
   // Background
-  this.add
-    .image(window.innerWidth / 2, window.innerHeight / 2, "store")
-    .setDisplaySize(window.innerWidth, window.innerHeight);
+  const bg = this.add.image(this.scale.width / 2, this.scale.height / 2, "store");
+
+  // Scale while keeping aspect ratio and covering the screen
+  const scaleX = this.scale.width / bg.width;
+  const scaleY = this.scale.height / bg.height;
+  const scale = Math.max(scaleX, scaleY);
+  bg.setScale(scale);
+
+  // Ensure it's centered
+  bg.setScrollFactor(0);
   
   // white
   let pinkOverlay = this.add.graphics();
@@ -220,7 +226,16 @@ function create() {
     fill: "#ffffff",
     fontFamily: "Jua",
   }).setOrigin(0.5, 0); // Centered horizontally
-  
+
+  // Responsive handler
+  this.scale.on("resize", (gameSize) => {
+    const width = gameSize.width;
+    const height = gameSize.height;
+
+    scoreText.setPosition(30, 45);
+    timerDisplay.setPosition(width / 2, 45);
+  });
+
   // Pause button (top-right)
   const pauseButton = this.add.text(this.game.config.width - 30, 45, "Pause", {
     fontSize: "32px",
