@@ -5,6 +5,7 @@ export class GameOver extends Phaser.Scene {
 
   create() {
     console.log("Entered GameOver scene");
+
     // Add semi-transparent background
     this.add
       .image(window.innerWidth / 2, window.innerHeight / 2, "store")
