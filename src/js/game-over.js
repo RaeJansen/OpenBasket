@@ -157,15 +157,11 @@ export class GameOver extends Phaser.Scene {
     // Buttons
     createButton("Play Again", -130, () => {
       this.registry.set("score", 0);
-      this.registry.set("remainingTime", 60);
+      this.registry.set("remainingTime", 30);
       this.scene.start("default");
     });
 
-    createButton("Replay", 0, () => {
-      window.location.href = "main-menu.html";
-    });
-
-    createButton("Back to Form", 130, () => {
+    createButton("Back to Form", 10, () => {
       window.location.href = "index.html";
     });
   }
