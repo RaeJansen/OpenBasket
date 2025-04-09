@@ -198,9 +198,16 @@ function create() {
   this.registry.set("score", score);
   this.registry.set("remainingTime", remainingTime);
   // Background
-  this.add
-    .image(window.innerWidth / 2, window.innerHeight / 2, "store")
-    .setDisplaySize(window.innerWidth, window.innerHeight);
+  const bg = this.add.image(this.scale.width / 2, this.scale.height / 2, "store");
+
+  // Scale while keeping aspect ratio and covering the screen
+  const scaleX = this.scale.width / bg.width;
+  const scaleY = this.scale.height / bg.height;
+  const scale = Math.max(scaleX, scaleY);
+  bg.setScale(scale);
+
+  // Ensure it's centered
+  bg.setScrollFactor(0);
   
   // white
   let pinkOverlay = this.add.graphics();
@@ -253,7 +260,7 @@ function create() {
 
   // Countdown timer event
   this.time.addEvent({
-    delay: 1000, // Every second
+    delay: 10, // Every second
     loop: true,
     callback: () => {
       remainingTime--;
