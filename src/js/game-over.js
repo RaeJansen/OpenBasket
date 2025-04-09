@@ -80,7 +80,7 @@ export class GameOver extends Phaser.Scene {
               border: 2px solid #E74011;
               border-radius: 8px;
               text-align: center;
-            " />
+            ">
             <button id="submitScoreBtn" style="
               font-size: 18px;
               padding: 10px 20px;
@@ -94,8 +94,6 @@ export class GameOver extends Phaser.Scene {
         `;
 
         document.body.appendChild(modal);
-
-        document.body.appendChild(usernameInput);
 
         document.getElementById("submitScoreBtn").addEventListener("click", () => {
           const usernameInput = document.getElementById("usernameInput");
