@@ -93,7 +93,7 @@ export class GameOver extends Phaser.Scene {
         this.game.config.height * 0.45,
         "Thanks for playing! We hope you enjoy \n the business innovation showcase!",
         {
-          fontSize: `${baseFontSize * 0.6}px`,
+          fontSize: `${baseFontSize * 0.7}px`,
           fill: "#ffffff",
           fontFamily: "Jua",
           align: "center",
@@ -109,7 +109,7 @@ export class GameOver extends Phaser.Scene {
         this.game.config.height * 0.55,
         `Your Score: ${finalScore}`,
         {
-          fontSize: `${baseFontSize * 0.8}px`,
+          fontSize: `${baseFontSize * 0.9}px`,
           fill: "#fff",
           fontFamily: "Jua",
         }
@@ -127,7 +127,7 @@ export class GameOver extends Phaser.Scene {
 
       const label = this.add
         .text(this.game.config.width / 2, y + buttonHeight / 2, text, {
-          fontSize: `${baseFontSize * 0.7}px`,
+          fontSize: `${baseFontSize * 0.8}px`,
           fill: "#fff",
           fontFamily: "Jua",
         })

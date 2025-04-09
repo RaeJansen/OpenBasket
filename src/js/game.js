@@ -235,8 +235,6 @@ function create() {
       fontSize: `${baseFontSize}px`,
       fill: "#ffffff",
       fontFamily: "Jua",
-      stroke: "#000000",
-      strokeThickness: 4,
     })
     .setOrigin(0, 0.5);
 
@@ -246,8 +244,6 @@ function create() {
       fontSize: `${baseFontSize}px`,
       fill: "#ffffff",
       fontFamily: "Jua",
-      stroke: "#000000",
-      strokeThickness: 4,
     })
     .setOrigin(0.5, 0.5);
 
@@ -261,8 +257,6 @@ function create() {
         fontSize: `${baseFontSize}px`,
         fill: "#ffffff",
         fontFamily: "Jua",
-        stroke: "#000000",
-        strokeThickness: 4,
       }
     )
     .setOrigin(1, 0.5)
@@ -291,8 +285,6 @@ function create() {
       fontSize: "64px",
       fill: "#ffffff",
       fontFamily: "Jua",
-      stroke: "#000000",
-      strokeThickness: 8,
     })
     .setOrigin(0.5);
 
