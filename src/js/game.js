@@ -219,7 +219,7 @@ function create() {
   });
 
   // Timer text (top-center)
-  timerDisplay = this.add.text(this.game.config.width / 2, 45, "1:00", {
+  timerDisplay = this.add.text(this.game.config.width / 2, 45, "0:30", {
     fontSize: "32px",
     fill: "#ffffff",
     fontFamily: "Jua",
