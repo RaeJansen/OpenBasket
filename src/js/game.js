@@ -112,6 +112,13 @@ function createRandomObject(scene) {
       object.setInteractive();
       object.setData("points", selectedObject.points);
 
+      // Add a larger hit area for better clickability
+      object.setHitArea(
+        new Phaser.Geom.Circle(0, 0, 100),
+        Phaser.Geom.Circle.Contains
+      );
+      object.input.hitAreaCallback = Phaser.Geom.Circle.Contains;
+
       // Make object shrink and disappear faster as time goes on
       // Shrink faster as time runs out
       const progress = 1 - scene.registry.get("remainingTime") / 30;
