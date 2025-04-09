@@ -109,15 +109,15 @@ function createRandomObject(scene) {
     if (validPosition) {
       object = scene.objects.create(x, y, selectedObject.texture);
       object.setScale(newObjectScale);
-      object.setInteractive();
+      object.setInteractive({
+        hitArea: new Phaser.Geom.Circle(0, 0, 100),
+        hitAreaCallback: Phaser.Geom.Circle.Contains,
+      });
+      object.setInteractive({
+        hitArea: new Phaser.Geom.Circle(0, 0, 100),
+        hitAreaCallback: Phaser.Geom.Circle.Contains,
+      });
       object.setData("points", selectedObject.points);
-
-      // Add a larger hit area for better clickability
-      object.setHitArea(
-        new Phaser.Geom.Circle(0, 0, 100),
-        Phaser.Geom.Circle.Contains
-      );
-      object.input.hitAreaCallback = Phaser.Geom.Circle.Contains;
 
       // Make object shrink and disappear faster as time goes on
       // Shrink faster as time runs out
@@ -228,32 +228,34 @@ function create() {
 
   const topBar = this.add.graphics();
   topBar.fillStyle(0xe74011, 1);
-  topBar.fillRect(0, 0, this.game.config.width, 120);
+  topBar.fillRect(0, 0, this.game.config.width, 80);
 
   // Score text (top-left)
-  scoreText = this.add.text(30, 45, "Score: 0", {
-    fontSize: "32px",
-    fill: "#ffffff",
-    fontFamily: "Jua",
-  });
+  scoreText = this.add
+    .text(30, 40, "Score: 0", {
+      fontSize: "32px",
+      fill: "#ffffff",
+      fontFamily: "Jua",
+    })
+    .setOrigin(0, 0.5);
 
   // Timer text (top-center)
   timerDisplay = this.add
-    .text(this.game.config.width / 2, 45, "0:30", {
+    .text(this.game.config.width / 2, 40, "0:30", {
       fontSize: "32px",
       fill: "#ffffff",
       fontFamily: "Jua",
     })
-    .setOrigin(0.5, 0);
+    .setOrigin(0.5, 0.5);
 
   // Pause button (top-right)
   const pauseButton = this.add
-    .text(this.game.config.width - 30, 45, "Pause", {
+    .text(this.game.config.width - 30, 40, "Pause", {
       fontSize: "32px",
       fill: "#ffffff",
       fontFamily: "Jua",
     })
-    .setOrigin(1, 0)
+    .setOrigin(1, 0.5)
     .setInteractive();
 
   pauseButton.on("pointerdown", () => {

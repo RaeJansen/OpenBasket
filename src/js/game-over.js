@@ -43,7 +43,7 @@ export class GameOver extends Phaser.Scene {
 
   showGameOverScreen() {
     // Add auto-return timer
-    this.autoReturnTimer = this.time.delayedCall(1000000, () => {
+    this.autoReturnTimer = this.time.delayedCall(20000, () => {
       this.returnToIndex();
     });
 
@@ -51,10 +51,9 @@ export class GameOver extends Phaser.Scene {
     this.input.on("pointerdown", () => {
       if (this.autoReturnTimer) {
         this.autoReturnTimer.remove();
-        this.autoReturnTimer = this.time.delayedCall(1000000, () => {
+        this.autoReturnTimer = this.time.delayedCall(20000, () => {
           this.returnToIndex();
         });
-        //FIX BEFORE SUBMISSION
       }
     });
 
@@ -71,7 +70,7 @@ export class GameOver extends Phaser.Scene {
     this.add
       .text(
         this.game.config.width / 2,
-        this.game.config.height / 2 - 100,
+        this.game.config.height / 2 - 200,
         "Game Over",
         {
           fontSize: "64px",
@@ -85,7 +84,7 @@ export class GameOver extends Phaser.Scene {
     this.add
       .text(
         this.game.config.width / 2,
-        this.game.config.height / 2 - 200,
+        this.game.config.height / 2 - 100,
         "Thanks for playing! We hope you enjoy \n the business innovation showcase!",
         {
           fontSize: "32px",
@@ -101,7 +100,7 @@ export class GameOver extends Phaser.Scene {
     this.add
       .text(
         this.game.config.width / 2,
-        this.game.config.height / 2 - 50,
+        this.game.config.height / 2,
         `Your Score: ${finalScore}`,
         {
           fontSize: "40px",
@@ -205,13 +204,13 @@ export class GameOver extends Phaser.Scene {
     };
 
     // Buttons
-    createButton("Play Again", 50, () => {
+    createButton("Play Again", 100, () => {
       this.registry.set("score", 0);
       this.registry.set("remainingTime", 30);
       this.scene.start("default");
     });
 
-    createButton("Back to Form", 150, () => {
+    createButton("Back to Form", 200, () => {
       window.location.href = "index.html";
     });
   }
