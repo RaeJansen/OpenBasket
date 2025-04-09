@@ -5,6 +5,14 @@ document
     e.preventDefault();
 
     const form = e.target;
+
+    // Check if gender is selected
+    const genderChecked = document.querySelector('input[name="gender"]:checked');
+    if (!genderChecked) {
+      alert("Please select a gender.");
+      return; // Stop submission
+    }
+
     const data = {
       gender: form.gender.value,
       age: form.age.value,
@@ -21,16 +29,11 @@ document
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            gender: form.gender.value,
-            age: form.age.value,
-            shopping_frequency: form.shopping_frequency.value,
-            ethnic_cuisine: form.ethnic_cuisine.value,
-          }),
+          body: JSON.stringify(data),
         }
       );
 
-      window.location.href = "main-menu.html"; 
+      window.location.href = "main-menu.html";
     } catch (err) {
       alert("Error submitting form.");
       console.error(err);
