@@ -198,7 +198,11 @@ function create() {
   this.registry.set("score", score);
   this.registry.set("remainingTime", remainingTime);
   // Background
-  const bg = this.add.image(this.scale.width / 2, this.scale.height / 2, "store");
+  const bg = this.add.image(
+    this.scale.width / 2,
+    this.scale.height / 2,
+    "store"
+  );
 
   // Scale while keeping aspect ratio and covering the screen
   const scaleX = this.scale.width / bg.width;
@@ -208,7 +212,7 @@ function create() {
 
   // Ensure it's centered
   bg.setScrollFactor(0);
-  
+
   // white
   let pinkOverlay = this.add.graphics();
   pinkOverlay.fillStyle(0xffffff, 0.8);
@@ -226,12 +230,14 @@ function create() {
   });
 
   // Timer text (top-center)
-  timerDisplay = this.add.text(this.game.config.width / 2, 45, "0:30", {
-    fontSize: "32px",
-    fill: "#ffffff",
-    fontFamily: "Jua",
-  }).setOrigin(0.5, 0); // Centered horizontally
-  
+  timerDisplay = this.add
+    .text(this.game.config.width / 2, 45, "0:30", {
+      fontSize: "32px",
+      fill: "#ffffff",
+      fontFamily: "Jua",
+    })
+    .setOrigin(0.5, 0); // Centered horizontally
+
   // Pause button (top-right)
   const pauseButton = this.add
     .text(this.game.config.width - 30, 45, "Pause", {
@@ -260,7 +266,7 @@ function create() {
 
   // Countdown timer event
   this.time.addEvent({
-    delay: 10, // Every second
+    delay: 1000, // Every second
     loop: true,
     callback: () => {
       remainingTime--;
