@@ -2,20 +2,65 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenBasket Game</title>
-    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script> -->
-    <script type="module" src="js/api.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaderboard</title>
+  <!-- Firebase compat libraries -->
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+  <!-- Inline Firebase setup -->
+  <script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyAnU8aatoRtA0NKDAFaW5A7s8F5Iih7Dlg",
+        authDomain: "openbasket-leaderboard-580cb.firebaseapp.com",
+        projectId: "openbasket-leaderboard-580cb",
+        storageBucket: "openbasket-leaderboard-580cb.firebasestorage.app",
+        messagingSenderId: "35984053615",
+        appId: "1:35984053615:web:5321b19786f435ef10049a",
+        measurementId: "G-JBBRM5WPGY",
+    };
 
-    <link rel="stylesheet" href="../styles.css">
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
+  <script>
+    async function getLeaderboardData() {
+      const querySnapshot = await db.collection("leaderboard")
+        .orderBy("score", "desc")
+        .get();
 
+      const table = document.createElement("table");
+      table.style.width = "100%";
+      table.setAttribute("border", "1");
+
+      const thead = table.createTHead();
+      const headerRow = thead.insertRow();
+      const headers = ["Username", "Score"];
+      headers.forEach((text) => {
+        const th = document.createElement("th");
+        th.textContent = text;
+        headerRow.appendChild(th);
+      });
+
+      const tbody = table.createTBody();
+      querySnapshot.forEach((doc) => {
+        const row = tbody.insertRow();
+        const data = doc.data();
+        row.insertCell().textContent = data.username;
+        row.insertCell().textContent = data.score;
+      });
+
+      const container = document.getElementById("leaderboard-container");
+      container.innerHTML = "";
+      container.appendChild(table);
+    }
+
+    window.onload = getLeaderboardData;
+  </script>
 </head>
 
 <body>
-    <div id="leaderboard-container"></div>
+  <div id="leaderboard-container">Loading leaderboard...</div>
 </body>
 
 </html>
