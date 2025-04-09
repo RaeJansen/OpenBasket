@@ -194,7 +194,7 @@ function objectSpawnTimer(scene) {
 // Main scene functions
 function create() {
   score = 0;
-  remainingTime = 60; // change this to change time. 1 = 1 sec
+  remainingTime = 30; // change this to change time. 1 = 1 sec
   this.registry.set("score", score);
   this.registry.set("remainingTime", remainingTime);
   // Background
@@ -253,7 +253,7 @@ function create() {
 
   // Countdown timer event
   this.time.addEvent({
-    delay: 10, // Every second
+    delay: 1000, // Every second
     loop: true,
     callback: () => {
       remainingTime--;
