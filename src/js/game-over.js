@@ -43,7 +43,7 @@ export class GameOver extends Phaser.Scene {
 
   showGameOverScreen() {
     // Add auto-return timer
-    this.autoReturnTimer = this.time.delayedCall(15000, () => {
+    this.autoReturnTimer = this.time.delayedCall(1000000, () => {
       this.returnToIndex();
     });
 
@@ -51,9 +51,10 @@ export class GameOver extends Phaser.Scene {
     this.input.on("pointerdown", () => {
       if (this.autoReturnTimer) {
         this.autoReturnTimer.remove();
-        this.autoReturnTimer = this.time.delayedCall(15000, () => {
+        this.autoReturnTimer = this.time.delayedCall(1000000, () => {
           this.returnToIndex();
         });
+        //FIX BEFORE SUBMISSION
       }
     });
 
@@ -80,15 +81,30 @@ export class GameOver extends Phaser.Scene {
       )
       .setOrigin(0.5);
 
+    // Thanks for playing text
+    this.add
+      .text(
+        this.game.config.width / 2,
+        this.game.config.height / 2 - 200,
+        "Thanks for playing! We hope you enjoy \n the business innovation showcase!",
+        {
+          fontSize: "32px",
+          fill: "#ffffff",
+          fontFamily: "Jua",
+          align: "center",
+        }
+      )
+      .setOrigin(0.5);
+
     // Score display
     const finalScore = this.registry.get("score") || 0;
     this.add
       .text(
         this.game.config.width / 2,
-        this.game.config.height / 2 - 200,
+        this.game.config.height / 2 - 50,
         `Your Score: ${finalScore}`,
         {
-          fontSize: "32px",
+          fontSize: "40px",
           fill: "#fff",
           fontFamily: "Jua",
         }
@@ -189,13 +205,13 @@ export class GameOver extends Phaser.Scene {
     };
 
     // Buttons
-    createButton("Play Again", -130, () => {
+    createButton("Play Again", 50, () => {
       this.registry.set("score", 0);
       this.registry.set("remainingTime", 30);
       this.scene.start("default");
     });
 
-    createButton("Back to Form", 10, () => {
+    createButton("Back to Form", 150, () => {
       window.location.href = "index.html";
     });
   }

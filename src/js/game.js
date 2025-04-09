@@ -32,7 +32,7 @@ const game = new Phaser.Game(config);
 let score = 0;
 let scoreText;
 let timerDisplay;
-let remainingTime = 60; // 2 minutes in seconds
+let remainingTime = 30; // 30 seconds
 let objectConfig = [
   { texture: "seaweed", points: 10, weight: 25 },
   { texture: "bao-bao", points: 15, weight: 20 },
@@ -114,7 +114,7 @@ function createRandomObject(scene) {
 
       // Make object shrink and disappear faster as time goes on
       // Shrink faster as time runs out
-      const progress = 1 - scene.registry.get("remainingTime") / 60;
+      const progress = 1 - scene.registry.get("remainingTime") / 30;
       const minLifetime = Phaser.Math.Linear(1500, 400, progress);
       const maxLifetime = Phaser.Math.Linear(4000, 1200, progress);
       const lifetime = Phaser.Math.Between(minLifetime, maxLifetime);
@@ -171,7 +171,7 @@ function createRandomObject(scene) {
 // Spawn objects at random intervals
 function objectSpawnTimer(scene) {
   const spawnNext = () => {
-    const progress = 1 - scene.registry.get("remainingTime") / 60; // 0 → 1
+    const progress = 1 - scene.registry.get("remainingTime") / 30; // 0 → 1
 
     // Spawn more objects later in the game
     const objectCount = Phaser.Math.Between(1, Math.floor(1 + progress * 4)); // 1 → up to 4
