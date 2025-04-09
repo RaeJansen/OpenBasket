@@ -1,5 +1,5 @@
-import { GameOver } from './game-over.js';
-import { PauseScene } from './pause-scene.js';
+import { GameOver } from "./game-over.js";
+import { PauseScene } from "./pause-scene.js";
 
 // Game config (global)
 const config = {
@@ -40,9 +40,8 @@ let objectConfig = [
   { texture: "dragon-fruit", points: 30, weight: 6 },
   { texture: "moo-ping", points: 35, weight: 6 },
   { texture: "pop-can", points: -20, weight: 15 },
-  { texture: "logo", points: 100, weight: 0.5 },
+  { texture: "logo", points: 100, weight: 1 },
 ];
-
 
 // Preload assets
 function preload() {
@@ -54,7 +53,7 @@ function preload() {
   this.load.image("mandazi", "./assets/img/mandazi.webp");
   this.load.image("moo-ping", "./assets/img/moo-ping.webp");
   this.load.image("pop-can", "./assets/img/pop-can.webp");
-  this.load.image("logo", "./assets/img/logo.webp");
+  this.load.image("logo", "./assets/img/logo-object.webp");
 }
 
 // Helper functions
@@ -83,7 +82,10 @@ function createRandomObject(scene) {
 
     // Generate a random position on the screen (avoiding top bar)
     const x = Phaser.Math.Between(50, scene.game.config.width - 50);
-    const y = Phaser.Math.Between(120 + newObjectRadius + 10, scene.game.config.height - newObjectRadius);
+    const y = Phaser.Math.Between(
+      120 + newObjectRadius + 10,
+      scene.game.config.height - newObjectRadius
+    );
 
     validPosition = true;
 
@@ -92,7 +94,12 @@ function createRandomObject(scene) {
       const existingRadius = existingObject.displayWidth / 2;
       const safeDistance = newObjectRadius + existingRadius + 10;
 
-      const distance = Phaser.Math.Distance.Between(x, y, existingObject.x, existingObject.y);
+      const distance = Phaser.Math.Distance.Between(
+        x,
+        y,
+        existingObject.x,
+        existingObject.y
+      );
       if (distance < safeDistance) {
         validPosition = false;
       }
@@ -101,13 +108,14 @@ function createRandomObject(scene) {
     // If position is good, create the object
     if (validPosition) {
       object = scene.objects.create(x, y, selectedObject.texture);
+      // Adjust scale: smaller if it's the "logo", default otherwise
       object.setScale(newObjectScale);
       object.setInteractive();
       object.setData("points", selectedObject.points);
 
       // Make object shrink and disappear faster as time goes on
       // Shrink faster as time runs out
-      const progress = 1 - (scene.registry.get("remainingTime") / 60);
+      const progress = 1 - scene.registry.get("remainingTime") / 60;
       const minLifetime = Phaser.Math.Linear(1500, 400, progress);
       const maxLifetime = Phaser.Math.Linear(4000, 1200, progress);
       const lifetime = Phaser.Math.Between(minLifetime, maxLifetime);
@@ -150,7 +158,6 @@ function createRandomObject(scene) {
           onComplete: () => object.destroy(),
         });
       });
-
     }
   }
 
@@ -165,7 +172,7 @@ function createRandomObject(scene) {
 // Spawn objects at random intervals
 function objectSpawnTimer(scene) {
   const spawnNext = () => {
-    const progress = 1 - (scene.registry.get("remainingTime") / 60); // 0 → 1
+    const progress = 1 - scene.registry.get("remainingTime") / 60; // 0 → 1
 
     // Spawn more objects later in the game
     const objectCount = Phaser.Math.Between(1, Math.floor(1 + progress * 4)); // 1 → up to 4
@@ -195,37 +202,41 @@ function create() {
   this.add
     .image(window.innerWidth / 2, window.innerHeight / 2, "store")
     .setDisplaySize(window.innerWidth, window.innerHeight);
-  
+
   // white
   let pinkOverlay = this.add.graphics();
-  pinkOverlay.fillStyle(0xFFFFFF, 0.8);
+  pinkOverlay.fillStyle(0xffffff, 0.8);
   pinkOverlay.fillRect(0, 0, this.game.config.width, this.game.config.height);
-  
 
   const topBar = this.add.graphics();
-  topBar.fillStyle(0xE74011, 1); // Light pink background, nearly solid
+  topBar.fillStyle(0xe74011, 1); // Light pink background, nearly solid
   topBar.fillRect(0, 0, this.game.config.width, 120);
-  
+
   // Score text (top-left)
   scoreText = this.add.text(30, 45, "Score: 0", {
     fontSize: "32px",
     fill: "#ffffff",
     fontFamily: "Jua",
   });
-  
+
   // Timer text (top-center)
-  timerDisplay = this.add.text(this.game.config.width / 2, 45, "1:00", {
-    fontSize: "32px",
-    fill: "#ffffff",
-    fontFamily: "Jua",
-  }).setOrigin(0.5, 0); // Centered horizontally
-  
+  timerDisplay = this.add
+    .text(this.game.config.width / 2, 45, "1:00", {
+      fontSize: "32px",
+      fill: "#ffffff",
+      fontFamily: "Jua",
+    })
+    .setOrigin(0.5, 0); // Centered horizontally
+
   // Pause button (top-right)
-  const pauseButton = this.add.text(this.game.config.width - 30, 45, "Pause", {
-    fontSize: "32px",
-    fill: "#ffffff",
-    fontFamily: "Jua",
-  }).setOrigin(1, 0).setInteractive();
+  const pauseButton = this.add
+    .text(this.game.config.width - 30, 45, "Pause", {
+      fontSize: "32px",
+      fill: "#ffffff",
+      fontFamily: "Jua",
+    })
+    .setOrigin(1, 0)
+    .setInteractive();
 
   pauseButton.on("pointerdown", () => {
     this.scene.launch("PauseScene");
@@ -245,24 +256,23 @@ function create() {
 
   // Countdown timer event
   this.time.addEvent({
-    delay: 1000, // Every second
+    delay: 10, // Every second
     loop: true,
     callback: () => {
       remainingTime--;
       this.registry.set("remainingTime", remainingTime);
 
-    // Format time as MM:SS
-    const minutes = Math.floor(remainingTime / 60);
-    const seconds = remainingTime % 60;
-    timerDisplay.setText(`${minutes}:${seconds.toString().padStart(2, "0")}`);
+      // Format time as MM:SS
+      const minutes = Math.floor(remainingTime / 60);
+      const seconds = remainingTime % 60;
+      timerDisplay.setText(`${minutes}:${seconds.toString().padStart(2, "0")}`);
 
-    if (remainingTime <= 0) {
-      console.log("Time's up")
-      this.scene.start("GameOver");
-    }
-  },
-});
-  
+      if (remainingTime <= 0) {
+        console.log("Time's up");
+        this.scene.start("GameOver");
+      }
+    },
+  });
 }
 
 function update() {}
