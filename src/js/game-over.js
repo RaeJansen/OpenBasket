@@ -66,14 +66,20 @@ export class GameOver extends Phaser.Scene {
     graphics.fillStyle(0x000000, 0.8);
     graphics.fillRect(0, 0, this.game.config.width, this.game.config.height);
 
+    // Calculate responsive sizes
+    const baseFontSize = Math.min(this.game.config.width * 0.08, 64); // 8% of screen width, max 64px
+    const titleFontSize = Math.min(this.game.config.width * 0.12, 96); // 12% of screen width, max 96px
+    const buttonWidth = Math.min(this.game.config.width * 0.6, 300); // 60% of screen width, max 300px
+    const buttonHeight = Math.min(this.game.config.height * 0.08, 60); // 8% of screen height, max 60px
+
     // Game Over text
     this.add
       .text(
         this.game.config.width / 2,
-        this.game.config.height / 2 - 200,
+        this.game.config.height * 0.3,
         "Game Over",
         {
-          fontSize: "64px",
+          fontSize: `${titleFontSize}px`,
           fill: "#fff",
           fontFamily: "Jua",
         }
@@ -84,10 +90,10 @@ export class GameOver extends Phaser.Scene {
     this.add
       .text(
         this.game.config.width / 2,
-        this.game.config.height / 2 - 100,
+        this.game.config.height * 0.45,
         "Thanks for playing! We hope you enjoy \n the business innovation showcase!",
         {
-          fontSize: "32px",
+          fontSize: `${baseFontSize * 0.6}px`,
           fill: "#ffffff",
           fontFamily: "Jua",
           align: "center",
@@ -100,117 +106,48 @@ export class GameOver extends Phaser.Scene {
     this.add
       .text(
         this.game.config.width / 2,
-        this.game.config.height / 2,
+        this.game.config.height * 0.55,
         `Your Score: ${finalScore}`,
         {
-          fontSize: "40px",
+          fontSize: `${baseFontSize * 0.8}px`,
           fill: "#fff",
           fontFamily: "Jua",
         }
       )
       .setOrigin(0.5);
 
-    // Username input modal
-    // const modal = document.createElement("div");
-    // modal.style.position = "absolute";
-    // modal.style.top = "0";
-    // modal.style.left = "0";
-    // modal.style.width = "100%";
-    // modal.style.height = "100%";
-    // modal.style.display = "flex";
-    // modal.style.alignItems = "center";
-    // modal.style.justifyContent = "center";
-    // modal.style.backgroundColor = "rgba(0, 0, 0, 0.6)";
-    // modal.style.zIndex = 1000;
-
-    // modal.innerHTML = `
-    //   <div style="
-    //     background: white;
-    //     padding: 30px;
-    //     border-radius: 12px;
-    //     text-align: center;
-    //     font-family: sans-serif;
-    //     box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    //     display: flex;
-    //     flex-direction: column;
-    //     align-items: center;
-    //     gap: 20px;
-    //   ">
-    //     <h2>Enter Your Name</h2>
-    //     <input id="usernameInput" type="text" placeholder="Your name" style="
-    //       font-size: 18px;
-    //       padding: 10px;
-    //       width: 80%;
-    //       border: 2px solid #E74011;
-    //       border-radius: 8px;
-    //       text-align: center;
-    //     ">
-    //     <button id="submitScoreBtn" style="
-    //       font-size: 18px;
-    //       padding: 10px 20px;
-    //       background-color: #E74011;
-    //       color: white;
-    //       border: none;
-    //       border-radius: 8px;
-    //       cursor: pointer;
-    //     ">Submit</button>
-    //   </div>
-    // `;
-    // document.body.appendChild(modal);
-
-    // document.getElementById("submitScoreBtn").addEventListener("click", () => {
-    //   const usernameInput = document.getElementById("usernameInput");
-    //   const username = usernameInput.value.trim() || "Anonymous";
-
-    //   // Save score
-    //   console.log("Submitting score:", username, finalScore);
-    //   addToLeaderboard(username, finalScore);
-
-    //   // Remove modal
-    //   if (modal && modal.parentNode) {
-    //     modal.parentNode.removeChild(modal);
-    //   }
-    // });
-
     // Reusable button creator
     const createButton = (text, yOffset, onClick) => {
-      const width = 220;
-      const height = 60;
-      const x = this.game.config.width / 2 - width / 2;
-      const y = this.game.config.height / 2 + yOffset - height / 2;
+      const x = this.game.config.width / 2 - buttonWidth / 2;
+      const y = this.game.config.height * 0.65 + yOffset;
 
       const bg = this.add.graphics();
       bg.fillStyle(0xe74011, 1);
-      bg.fillRoundedRect(x, y, width, height, 20);
+      bg.fillRoundedRect(x, y, buttonWidth, buttonHeight, 20);
 
       const label = this.add
-        .text(
-          this.game.config.width / 2,
-          this.game.config.height / 2 + yOffset,
-          text,
-          {
-            fontSize: "32px",
-            fill: "#fff",
-            fontFamily: "Jua",
-          }
-        )
+        .text(this.game.config.width / 2, y + buttonHeight / 2, text, {
+          fontSize: `${baseFontSize * 0.7}px`,
+          fill: "#fff",
+          fontFamily: "Jua",
+        })
         .setOrigin(0.5);
 
       bg.setInteractive(
-        new Phaser.Geom.Rectangle(x, y, width, height),
+        new Phaser.Geom.Rectangle(x, y, buttonWidth, buttonHeight),
         Phaser.Geom.Rectangle.Contains
       );
       bg.on("pointerdown", onClick);
     };
 
     // Buttons
-    createButton("Play Again", 100, () => {
+    createButton("Play Again", 0, () => {
       this.registry.set("score", 0);
       this.registry.set("remainingTime", 30);
       this.scene.start("default");
     });
 
-    createButton("Back to Form", 200, () => {
+    createButton("Back to Form", buttonHeight * 1.5, () => {
       window.location.href = "index.html";
     });
   }

@@ -73,7 +73,7 @@ function createRandomObject(scene) {
   let validPosition = false;
   const selectedObject = pickWeightedObject();
 
-  const newObjectScale = 1.5; // all objects use this scale
+  const newObjectScale = 2.5; // Increased from 1.5 to 2.5 for better visibility
   const newObjectRadius = 50 * newObjectScale; // base size ~100px
 
   // Try up to MAX_ATTEMPTS to find a non-overlapping position
@@ -110,11 +110,7 @@ function createRandomObject(scene) {
       object = scene.objects.create(x, y, selectedObject.texture);
       object.setScale(newObjectScale);
       object.setInteractive({
-        hitArea: new Phaser.Geom.Circle(0, 0, 100),
-        hitAreaCallback: Phaser.Geom.Circle.Contains,
-      });
-      object.setInteractive({
-        hitArea: new Phaser.Geom.Circle(0, 0, 100),
+        hitArea: new Phaser.Geom.Circle(0, 0, 50),
         hitAreaCallback: Phaser.Geom.Circle.Contains,
       });
       object.setData("points", selectedObject.points);
@@ -228,33 +224,47 @@ function create() {
 
   const topBar = this.add.graphics();
   topBar.fillStyle(0xe74011, 1);
-  topBar.fillRect(0, 0, this.game.config.width, 80);
+  topBar.fillRect(0, 0, this.game.config.width, this.game.config.height * 0.1); // 10% of screen height
+
+  // Calculate responsive font size based on screen width
+  const baseFontSize = Math.min(this.game.config.width * 0.08, 48); // Increased from 0.05 to 0.08 and max from 32 to 48
 
   // Score text (top-left)
   scoreText = this.add
-    .text(30, 40, "Score: 0", {
-      fontSize: "32px",
+    .text(30, this.game.config.height * 0.05, "Score: 0", {
+      fontSize: `${baseFontSize}px`,
       fill: "#ffffff",
       fontFamily: "Jua",
+      stroke: "#000000",
+      strokeThickness: 4,
     })
     .setOrigin(0, 0.5);
 
   // Timer text (top-center)
   timerDisplay = this.add
-    .text(this.game.config.width / 2, 40, "0:30", {
-      fontSize: "32px",
+    .text(this.game.config.width / 2, this.game.config.height * 0.05, "0:30", {
+      fontSize: `${baseFontSize}px`,
       fill: "#ffffff",
       fontFamily: "Jua",
+      stroke: "#000000",
+      strokeThickness: 4,
     })
     .setOrigin(0.5, 0.5);
 
   // Pause button (top-right)
   const pauseButton = this.add
-    .text(this.game.config.width - 30, 40, "Pause", {
-      fontSize: "32px",
-      fill: "#ffffff",
-      fontFamily: "Jua",
-    })
+    .text(
+      this.game.config.width - 30,
+      this.game.config.height * 0.05,
+      "Pause",
+      {
+        fontSize: `${baseFontSize}px`,
+        fill: "#ffffff",
+        fontFamily: "Jua",
+        stroke: "#000000",
+        strokeThickness: 4,
+      }
+    )
     .setOrigin(1, 0.5)
     .setInteractive();
 
