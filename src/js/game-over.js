@@ -43,7 +43,11 @@ export class GameOver extends Phaser.Scene {
 
   showGameOverScreen() {
     // Add auto-return timer
+<<<<<<< HEAD
     this.autoReturnTimer = this.time.delayedCall(20000, () => {
+=======
+    this.autoReturnTimer = this.time.delayedCall(15000, () => {
+>>>>>>> parent of d3d7992 (Game over updates)
       this.returnToIndex();
     });
 
@@ -51,7 +55,11 @@ export class GameOver extends Phaser.Scene {
     this.input.on("pointerdown", () => {
       if (this.autoReturnTimer) {
         this.autoReturnTimer.remove();
+<<<<<<< HEAD
         this.autoReturnTimer = this.time.delayedCall(20000, () => {
+=======
+        this.autoReturnTimer = this.time.delayedCall(15000, () => {
+>>>>>>> parent of d3d7992 (Game over updates)
           this.returnToIndex();
         });
       }
@@ -86,6 +94,7 @@ export class GameOver extends Phaser.Scene {
       )
       .setOrigin(0.5);
 
+<<<<<<< HEAD
     // Thanks for playing text
     this.add
       .text(
@@ -101,15 +110,24 @@ export class GameOver extends Phaser.Scene {
       )
       .setOrigin(0.5);
 
+=======
+>>>>>>> parent of d3d7992 (Game over updates)
     // Score display
     const finalScore = this.registry.get("score") || 0;
     this.add
       .text(
         this.game.config.width / 2,
+<<<<<<< HEAD
         this.game.config.height * 0.55,
         `Your Score: ${finalScore}`,
         {
           fontSize: `${baseFontSize * 0.9}px`,
+=======
+        this.game.config.height / 2 - 200,
+        `Your Score: ${finalScore}`,
+        {
+          fontSize: "32px",
+>>>>>>> parent of d3d7992 (Game over updates)
           fill: "#fff",
           fontFamily: "Jua",
         }
@@ -141,13 +159,21 @@ export class GameOver extends Phaser.Scene {
     };
 
     // Buttons
+<<<<<<< HEAD
     createButton("Play Again", 0, () => {
+=======
+    createButton("Play Again", -130, () => {
+>>>>>>> parent of d3d7992 (Game over updates)
       this.registry.set("score", 0);
       this.registry.set("remainingTime", 30);
       this.scene.start("default");
     });
 
+<<<<<<< HEAD
     createButton("Back to Form", buttonHeight * 1.5, () => {
+=======
+    createButton("Back to Form", 10, () => {
+>>>>>>> parent of d3d7992 (Game over updates)
       window.location.href = "index.html";
     });
   }
