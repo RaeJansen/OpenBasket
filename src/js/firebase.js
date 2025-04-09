@@ -1,17 +1,5 @@
-// firebase.js
 
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  orderBy,
-  query,
-} from "firebase/firestore";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAnU8aatoRtA0NKDAFaW5A7s8F5Iih7Dlg",
   authDomain: "openbasket-leaderboard-580cb.firebaseapp.com",
@@ -22,12 +10,10 @@ const firebaseConfig = {
   measurementId: "G-JBBRM5WPGY",
 };
 
-// Initialize Firebase only if not initialized yet
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-// Export Firebase services
-export const db = getFirestore(app);  // Only export db once
-export { collection, addDoc, getDocs, orderBy, query };
+export { db };
 
 
