@@ -1,4 +1,5 @@
-import { db, collection, addDoc, getDocs, orderBy, query  } from './firebase';
+import { db } from './firebase.js';
+// import { db, collection, addDoc, getDocs, orderBy, query  } from './firebase.js';
 
 /* Add player score to database */
 const addToLeaderboard = async (username, score) => {
@@ -54,6 +55,11 @@ const getLeaderboardData = async () => {
     leaderboardContainer.appendChild(table);
   };
 
-getLeaderboardData();
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.getElementById("leaderboard-container");
+  if (container) {
+    getLeaderboardData();
+  }
+});
 
 export { addToLeaderboard }

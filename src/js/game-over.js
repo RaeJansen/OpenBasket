@@ -1,4 +1,4 @@
-import { addToLeaderboard } from "./api";
+import { addToLeaderboard } from "./api.js";
 
 export class GameOver extends Phaser.Scene {
   constructor() {
