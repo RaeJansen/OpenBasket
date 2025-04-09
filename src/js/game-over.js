@@ -12,6 +12,7 @@ export class GameOver extends Phaser.Scene {
     this.add
       .image(window.innerWidth / 2, window.innerHeight / 2, "store")
       .setDisplaySize(window.innerWidth, window.innerHeight);
+
     let graphics = this.add.graphics();
     graphics.fillStyle(0x000000, 0.8);
     graphics.fillRect(0, 0, this.game.config.width, this.game.config.height);
@@ -45,104 +46,107 @@ export class GameOver extends Phaser.Scene {
       )
       .setOrigin(0.5);
 
-      // Create username input element
-      const modal = document.createElement("div");
-        modal.style.position = "absolute";
-        modal.style.top = "0";
-        modal.style.left = "0";
-        modal.style.width = "100%";
-        modal.style.height = "100%";
-        modal.style.display = "flex";
-        modal.style.alignItems = "center";
-        modal.style.justifyContent = "center";
-        modal.style.backgroundColor = "rgba(0, 0, 0, 0.6)";
-        modal.style.zIndex = 1000;
+    // Username input modal
+    // const modal = document.createElement("div");
+    // modal.style.position = "absolute";
+    // modal.style.top = "0";
+    // modal.style.left = "0";
+    // modal.style.width = "100%";
+    // modal.style.height = "100%";
+    // modal.style.display = "flex";
+    // modal.style.alignItems = "center";
+    // modal.style.justifyContent = "center";
+    // modal.style.backgroundColor = "rgba(0, 0, 0, 0.6)";
+    // modal.style.zIndex = 1000;
 
-        // Inner content box
-        modal.innerHTML = `
-          <div style="
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            font-family: sans-serif;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-          ">
-            <h2>Enter Your Name</h2>
-            <input id="usernameInput" type="text" placeholder="Your name" style="
-              font-size: 18px;
-              padding: 10px;
-              width: 80%;
-              border: 2px solid #E74011;
-              border-radius: 8px;
-              text-align: center;
-            ">
-            <button id="submitScoreBtn" style="
-              font-size: 18px;
-              padding: 10px 20px;
-              background-color: #E74011;
-              color: white;
-              border: none;
-              border-radius: 8px;
-              cursor: pointer;
-            ">Submit</button>
-          </div>
-        `;
+    // modal.innerHTML = `
+    //   <div style="
+    //     background: white;
+    //     padding: 30px;
+    //     border-radius: 12px;
+    //     text-align: center;
+    //     font-family: sans-serif;
+    //     box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    //     display: flex;
+    //     flex-direction: column;
+    //     align-items: center;
+    //     gap: 20px;
+    //   ">
+    //     <h2>Enter Your Name</h2>
+    //     <input id="usernameInput" type="text" placeholder="Your name" style="
+    //       font-size: 18px;
+    //       padding: 10px;
+    //       width: 80%;
+    //       border: 2px solid #E74011;
+    //       border-radius: 8px;
+    //       text-align: center;
+    //     ">
+    //     <button id="submitScoreBtn" style="
+    //       font-size: 18px;
+    //       padding: 10px 20px;
+    //       background-color: #E74011;
+    //       color: white;
+    //       border: none;
+    //       border-radius: 8px;
+    //       cursor: pointer;
+    //     ">Submit</button>
+    //   </div>
+    // `;
+    // document.body.appendChild(modal);
 
-        document.body.appendChild(modal);
+    // document.getElementById("submitScoreBtn").addEventListener("click", () => {
+    //   const usernameInput = document.getElementById("usernameInput");
+    //   const username = usernameInput.value.trim() || "Anonymous";
 
-        document.getElementById("submitScoreBtn").addEventListener("click", () => {
-          const usernameInput = document.getElementById("usernameInput");
-          const username = usernameInput.value.trim() || "Anonymous";
-        
-          // Store or use the username
-          addToLeaderboard(username, finalScore);
-        
-          // Remove modal
-          if (modal && modal.parentNode) {
-            modal.parentNode.removeChild(modal);
-          }
-        });
+    //   // Save score
+    //   console.log("Submitting score:", username, finalScore);
+    //   addToLeaderboard(username, finalScore);
 
-    const buttonWidth = 220;
-    const buttonHeight = 60;
-    const buttonX = this.game.config.width / 2 - buttonWidth / 2;
-    const buttonY = this.game.config.height / 2 - 130 - buttonHeight / 2;
+    //   // Remove modal
+    //   if (modal && modal.parentNode) {
+    //     modal.parentNode.removeChild(modal);
+    //   }
+    // });
 
-    // Rounded rectangle background
-    const buttonBg = this.add.graphics();
-    buttonBg.fillStyle(0xe74011, 1);
-    buttonBg.fillRoundedRect(buttonX, buttonY, buttonWidth, buttonHeight, 20);
+    // Reusable button creator
+    const createButton = (text, yOffset, onClick) => {
+      const width = 220;
+      const height = 60;
+      const x = this.game.config.width / 2 - width / 2;
+      const y = this.game.config.height / 2 + yOffset - height / 2;
 
-    // Text on top
-    const playAgainText = this.add
-      .text(
-        this.game.config.width / 2,
-        this.game.config.height / 2 - 130,
-        "Play Again",
-        {
+      const bg = this.add.graphics();
+      bg.fillStyle(0xe74011, 1);
+      bg.fillRoundedRect(x, y, width, height, 20);
+
+      const label = this.add
+        .text(this.game.config.width / 2, this.game.config.height / 2 + yOffset, text, {
           fontSize: "32px",
           fill: "#fff",
           fontFamily: "Jua",
-        }
-      )
-      .setOrigin(0.5);
+        })
+        .setOrigin(0.5);
 
-    // Set interactive area
-    buttonBg.setInteractive(
-      new Phaser.Geom.Rectangle(buttonX, buttonY, buttonWidth, buttonHeight),
-      Phaser.Geom.Rectangle.Contains
-    );
+      bg.setInteractive(
+        new Phaser.Geom.Rectangle(x, y, width, height),
+        Phaser.Geom.Rectangle.Contains
+      );
+      bg.on("pointerdown", onClick);
+    };
 
-    // Handle click
-    buttonBg.on("pointerdown", () => {
+    // Buttons
+    createButton("Play Again", -130, () => {
       this.registry.set("score", 0);
       this.registry.set("remainingTime", 60);
       this.scene.start("default");
+    });
+
+    createButton("Home", 0, () => {
+      window.location.href = "index.html";
+    });
+
+    createButton("Main Menu", 130, () => {
+      window.location.href = "main-menu.html";
     });
   }
 }
