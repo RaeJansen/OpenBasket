@@ -8,6 +8,21 @@ export class GameOver extends Phaser.Scene {
   create() {
     console.log("Entered GameOver scene");
 
+    // Add auto-return timer
+    this.autoReturnTimer = this.time.delayedCall(15000, () => {
+      this.returnToIndex();
+    });
+
+    // Reset timer on any input
+    this.input.on("pointerdown", () => {
+      if (this.autoReturnTimer) {
+        this.autoReturnTimer.remove();
+        this.autoReturnTimer = this.time.delayedCall(15000, () => {
+          this.returnToIndex();
+        });
+      }
+    });
+
     // Add semi-transparent background
     this.add
       .image(window.innerWidth / 2, window.innerHeight / 2, "store")
@@ -120,11 +135,16 @@ export class GameOver extends Phaser.Scene {
       bg.fillRoundedRect(x, y, width, height, 20);
 
       const label = this.add
-        .text(this.game.config.width / 2, this.game.config.height / 2 + yOffset, text, {
-          fontSize: "32px",
-          fill: "#fff",
-          fontFamily: "Jua",
-        })
+        .text(
+          this.game.config.width / 2,
+          this.game.config.height / 2 + yOffset,
+          text,
+          {
+            fontSize: "32px",
+            fill: "#fff",
+            fontFamily: "Jua",
+          }
+        )
         .setOrigin(0.5);
 
       bg.setInteractive(
@@ -141,12 +161,16 @@ export class GameOver extends Phaser.Scene {
       this.scene.start("default");
     });
 
-    createButton("Home", 0, () => {
-      window.location.href = "index.html";
-    });
-
-    createButton("Main Menu", 130, () => {
+    createButton("Replay", 0, () => {
       window.location.href = "main-menu.html";
     });
+
+    createButton("Back to Form", 130, () => {
+      window.location.href = "index.html";
+    });
+  }
+
+  returnToIndex() {
+    window.location.href = "index.html";
   }
 }
