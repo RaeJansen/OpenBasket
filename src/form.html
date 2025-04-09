@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Basket Survey</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="./js/form.js" defer></script>
+</head>
+<body>
+    
+    <form id="userPref">
+        <!-- Gender Selection -->
+        <label for="gender">Gender:</label><br>
+        <input type="radio" id="male" name="gender" value="Male">
+        <label for="male">Male</label><br>
+        <input type="radio" id="female" name="gender" value="Female">
+        <label for="female">Female</label><br>
+        <input type="radio" id="other" name="gender" value="Other">
+        <label for="other">Other</label><br>
+        <input type="radio" id="prefer_not_to_say" name="gender" value="Prefer not to say">
+        <label for="prefer_not_to_say">Prefer not to say</label><br><br>
+
+        <!-- Age Selection -->
+        <label for="age">Age:</label><br>
+        <input type="number" id="age" name="age" min="0" max="120" required><br><br>
+
+        <!-- Times Shopping per Month -->
+        <label for="shopping_frequency">How many times do you go shopping for groceries per month?</label><br>
+        <input type="number" id="shopping_frequency" name="shopping_frequency" min="0" required><br><br>
+
+        <!-- Favorite Ethnic Cuisine -->
+        <label for="ethnic_cuisine">Favorite Ethnic Cuisine:</label><br>
+        <select id="ethnic_cuisine" name="ethnic_cuisine">
+            <option value="Italian">Italian</option>
+            <option value="Mexican">Mexican</option>
+            <option value="Chinese">Chinese</option>
+            <option value="Indian">Indian</option>
+            <option value="Japanese">Japanese</option>
+            <option value="Greek">Greek</option>
+            <option value="Thai">Thai</option>
+            <option value="Other">Other</option>
+        </select><br><br>
+
+        <!-- Submit Button -->
+        <input type="submit" value="Submit" id="submit">
+    </form>
+</body>
+</html>

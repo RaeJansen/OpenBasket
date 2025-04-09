@@ -1,2 +1,36 @@
-div {
+body {
+    padding: 0;
+    font-family: "jua", italic;
+    text-align: center;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.instruction-flex {
+    display: flex;
+    flex-wrap: wrap;
+    width: 40%;
+    gap: 1rem;
+}
+
+.point-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.top-logo {
+    width: 200px;
+}
+
+p {
+    font-size: 18px;
+}
+
+.point-flex img {
+    width: 80px;
 }

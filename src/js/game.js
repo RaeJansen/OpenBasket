@@ -38,7 +38,7 @@ let objectConfig = [
   { texture: "bao-bao", points: 15, weight: 20 },
   { texture: "mandazi", points: 20, weight: 15 },
   { texture: "dragon-fruit", points: 30, weight: 6 },
-  { texture: "moo-ping", points: 30, weight: 6 },
+  { texture: "moo-ping", points: 35, weight: 6 },
   { texture: "pop-can", points: -20, weight: 15 },
   { texture: "logo", points: 100, weight: 0.5 },
 ];
