@@ -54,17 +54,6 @@ const getLeaderboardData = async () => {
     leaderboardContainer.appendChild(table);
   };
 
-document.getElementById("test-form").addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    let userElement = document.getElementById("username"); // 
-    let username = userElement.value;
-    let scoreElement = document.getElementById("score"); // 
-    let score = scoreElement.value;
-
-    console.log(username, score);
-    addToLeaderboard(username, parseInt(score));
-    
-})
-
 getLeaderboardData();
+
+export { addToLeaderboard }

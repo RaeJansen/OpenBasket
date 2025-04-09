@@ -25,7 +25,7 @@ document.getElementById("userPref").addEventListener("submit", async function (e
             })
           });
 
-      window.location.href = "game.html"; 
+      window.location.href = "main-menu.html"; 
     } catch (err) {
       alert("Error submitting form.");
       console.error(err);

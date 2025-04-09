@@ -1,4 +1,4 @@
-import { ClickerGame } from "./ClickerGame.js";
+/* import { ClickerGame } from "./ClickerGame.js"; */
 
 // renders the game canvas
 const config = {

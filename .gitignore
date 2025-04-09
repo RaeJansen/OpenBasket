@@ -10,6 +10,10 @@ firestore.rules
 # Environment variables (if you use a .env file)
 .env
 
+# Parcel cache
+.cache/
+.parcel-cache/
+
 # Build files (if using a bundler)
 dist/
 build/
